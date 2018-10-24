@@ -1,8 +1,9 @@
+import { CalendarDay } from 'components/Calendar';
 import * as React from 'react';
 import { render } from 'react-dom';
 
 const APP = () => (
-  <div>Hello world</div>
+  <CalendarDay />
 );
 
-render(<APP />, document.getElementById('root'));
+render(<APP/>, document.getElementById('root'));
