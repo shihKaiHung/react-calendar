@@ -1,5 +1,6 @@
 import {DaysComponent} from "components/Days";
 import {MonthComponent} from "components/Month";
+import {YearComponent} from "components/Year";
 import * as moment from 'moment';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -78,6 +79,17 @@ export class CalendarDay extends React.Component<{}, CalendarDayState> {
             />
           </Wrap>
         );
+      case 2:
+        return (
+          <Wrap>
+            <YearComponent
+              setNextDate={this.setNextDate}
+              setDate = {this.setDate}
+              addCurrentView={this.addCurrentView}
+              currentDate={this.state.currentDate}
+            />
+          </Wrap>
+        );
       default:
         return (
           <Wrap>
@@ -92,6 +104,7 @@ export class CalendarDay extends React.Component<{}, CalendarDayState> {
     }
   }
 }
+
 const Wrap = styled.div`
   width: 200px;
   height: 250px;

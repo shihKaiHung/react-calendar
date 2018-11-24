@@ -1,6 +1,8 @@
 import * as moment from "moment";
 import * as React from 'react';
+import {compose} from "recompose";
 import styled from 'styled-components';
+import {getDays} from "../utils/getDays";
 import {day, dayName} from "../utils/week";
 
 interface DaysProps {
@@ -10,23 +12,13 @@ interface DaysProps {
   addCurrentView: (view: number) => void;
 }
 
-export const DaysComponent: React.SFC<DaysProps> = ({currentDate, handleSubtractMonth, handleAddMonth, addCurrentView}) => {
-
-  const start = currentDate.clone().startOf('month').weekday(0);
-  const end = currentDate.clone().endOf('month').weekday(6);
-  const days = end.diff(start, 'days');
-  const daysArray = [];
-  const now = moment().startOf('day');
-  for (let i = 0 ; i < days + 1; i++) {
-    const currentDay = start;
-    daysArray.push({
-      label: currentDay.format('D'),
-      currentMonth: currentDay.month() === currentDate.month() && currentDay.year() === currentDay.year(),
-      isToday: currentDay.isSame(now),
-    });
-    start.add(1, "days");
-  }
-
+export const BaseComponent: React.SFC<DaysProps> = ({
+  currentDate,
+  handleSubtractMonth,
+  handleAddMonth,
+  addCurrentView,
+}) => {
+  const daysArray = getDays(currentDate);
   return (
     <>
       <CalendarSelect>
@@ -50,6 +42,9 @@ export const DaysComponent: React.SFC<DaysProps> = ({currentDate, handleSubtract
     </>
   );
 };
+
+export const DaysComponent = compose(
+)(BaseComponent);
 
 const WeekWrap = styled.div`
   display: flex;

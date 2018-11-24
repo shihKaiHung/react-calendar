@@ -18,13 +18,13 @@ interface MonthHandler {
 
 type MonthPropsType = MonthProps & MonthHandler;
 
-const BaseComponent: React.SFC<MonthPropsType> = ({currentDate, addYear, subtractYear, getDate}) => {
+const BaseComponent: React.SFC<MonthPropsType> = ({currentDate, addCurrentView, addYear, subtractYear, getDate}) => {
   const month = moment.monthsShort();
   return (
     <>
       <CalendarSelect>
         <i className="fa fa-angle-left" aria-hidden="true" onClick={subtractYear} />
-        <CalendarDate>{currentDate.format('YYYY')}</CalendarDate>
+        <CalendarDate onClick={() => addCurrentView(2)}>{currentDate.format('YYYY')}</CalendarDate>
         <i className="fa fa-angle-right" aria-hidden="true" onClick={addYear} />
       </CalendarSelect>
       <WeekWrap>
