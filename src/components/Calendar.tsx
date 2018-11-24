@@ -20,15 +20,14 @@ export class CalendarDay extends React.Component<{}, CalendarDayState> {
     this.addCurrentView = this.addCurrentView.bind(this);
     this.handleAddMonth = this.handleAddMonth.bind(this);
     this.handleSubtractMonth = this.handleSubtractMonth.bind(this);
+    this.setNextDate = this.setNextDate.bind(this);
     this.setDate = this.setDate.bind(this);
   }
 
-  addCurrentView() {
-    if (this.state.currentView < 3) {
-      this.setState({
-        currentView: this.state.currentView + 1,
-      });
-    }
+  addCurrentView(view: number) {
+    this.setState({
+      currentView: view,
+    });
   }
 
   handleAddMonth() {
@@ -40,6 +39,12 @@ export class CalendarDay extends React.Component<{}, CalendarDayState> {
   handleSubtractMonth() {
     this.setState({
       currentDate: this.state.currentDate.subtract(1, 'month'),
+    });
+  }
+
+  setNextDate(date: moment.Moment) {
+    this.setState({
+      currentDate: date,
     });
   }
 
@@ -66,11 +71,10 @@ export class CalendarDay extends React.Component<{}, CalendarDayState> {
         return (
           <Wrap>
             <MonthComponent
+              setNextDate={this.setNextDate}
               setDate = {this.setDate}
               addCurrentView={this.addCurrentView}
               currentDate={this.state.currentDate}
-              handleAddMonth={this.handleAddMonth}
-              handleSubtractMonth={this.handleSubtractMonth}
             />
           </Wrap>
         );

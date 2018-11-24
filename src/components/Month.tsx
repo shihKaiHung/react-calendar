@@ -1,32 +1,58 @@
 import * as moment from "moment";
 import * as React from 'react';
+import {compose, withHandlers} from 'recompose';
 import styled from 'styled-components';
 
-interface DaysProps {
+interface MonthProps {
   currentDate: moment.Moment;
-  handleSubtractMonth: () => void;
-  handleAddMonth: () => void;
-  addCurrentView: () => void;
+  setNextDate: (date: moment.Moment) => void;
+  addCurrentView: (view: number) => void;
   setDate: (date: moment.Moment) => void;
 }
 
-export const MonthComponent: React.SFC<DaysProps> = ({currentDate, handleSubtractMonth, handleAddMonth}) => {
+interface MonthHandler {
+  getDate: (month: string) => void;
+  addYear: () => void;
+  subtractYear: () => void;
+}
+
+type MonthPropsType = MonthProps & MonthHandler;
+
+const BaseComponent: React.SFC<MonthPropsType> = ({currentDate, addYear, subtractYear, getDate}) => {
   const month = moment.monthsShort();
   return (
     <>
       <CalendarSelect>
-        <i className="fa fa-angle-left" aria-hidden="true" onClick={handleSubtractMonth} />
+        <i className="fa fa-angle-left" aria-hidden="true" onClick={subtractYear} />
         <CalendarDate>{currentDate.format('YYYY')}</CalendarDate>
-        <i className="fa fa-angle-right" aria-hidden="true" onClick={handleAddMonth} />
+        <i className="fa fa-angle-right" aria-hidden="true" onClick={addYear} />
       </CalendarSelect>
       <WeekWrap>
         {
-          month.map((mon, index) => <MonthText key={index}>{mon}</MonthText>)
+          month.map((mon, index) => <MonthText key={index} onClick={() => getDate(mon)}>{mon}</MonthText>)
         }
       </WeekWrap>
     </>
   );
 };
+
+export const MonthComponent = compose<MonthPropsType, MonthProps>(
+  withHandlers<MonthPropsType, MonthHandler>({
+    getDate: ({currentDate, setDate, addCurrentView}) => month => {
+      const newMonth = currentDate.clone().month(month);
+      setDate(newMonth);
+      addCurrentView(0);
+    },
+    addYear: ({setNextDate, currentDate}) => () => {
+      const nextYear = currentDate.add(1, "year");
+      setNextDate(nextYear);
+    },
+    subtractYear: ({setNextDate, currentDate}) => () => {
+      const nextYear = currentDate.subtract(1, "year");
+      setNextDate(nextYear);
+    },
+  })
+)(BaseComponent);
 
 const WeekWrap = styled.div`
   display: flex;

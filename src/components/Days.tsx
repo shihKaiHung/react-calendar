@@ -7,7 +7,7 @@ interface DaysProps {
   currentDate: moment.Moment;
   handleSubtractMonth: () => void;
   handleAddMonth: () => void;
-  addCurrentView: () => void;
+  addCurrentView: (view: number) => void;
 }
 
 export const DaysComponent: React.SFC<DaysProps> = ({currentDate, handleSubtractMonth, handleAddMonth, addCurrentView}) => {
@@ -31,7 +31,7 @@ export const DaysComponent: React.SFC<DaysProps> = ({currentDate, handleSubtract
     <>
       <CalendarSelect>
         <i className="fa fa-angle-left" aria-hidden="true" onClick={handleSubtractMonth} />
-        <CalendarDate onClick={addCurrentView}>{currentDate.format('MMMM YYYY')}</CalendarDate>
+        <CalendarDate onClick={() => addCurrentView(1)}>{currentDate.format('MMMM YYYY')}</CalendarDate>
         <i className="fa fa-angle-right" aria-hidden="true" onClick={handleAddMonth} />
       </CalendarSelect>
       <WeekWrap>
