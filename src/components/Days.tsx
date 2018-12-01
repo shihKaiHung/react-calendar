@@ -43,7 +43,7 @@ export const BaseComponent: React.SFC<DaysProps> = ({
   );
 };
 
-export const DaysComponent = compose(
+export const DaysComponent = compose<{}, DaysProps>(
 )(BaseComponent);
 
 const WeekWrap = styled.div`

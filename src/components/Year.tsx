@@ -1,7 +1,9 @@
+import {List} from "immutable";
 import * as moment from "moment";
 import * as React from 'react';
-import {compose, withHandlers} from 'recompose';
+import {compose, withHandlers, withProps} from 'recompose';
 import styled from 'styled-components';
+import {getYears} from "../utils/getYears";
 
 interface YearProps {
   currentDate: moment.Moment;
@@ -10,26 +12,32 @@ interface YearProps {
   setDate: (date: moment.Moment) => void;
 }
 
+interface YearInjectProps {
+  yearArray: List<number>;
+}
+
 interface YearHandler {
   getDate: (month: string) => void;
   addYear: () => void;
   subtractYear: () => void;
 }
 
-type YearPropsType = YearProps & YearHandler;
+type YearPropsType = YearProps & YearHandler & YearInjectProps;
 
-const BaseComponent: React.SFC<YearPropsType> = ({currentDate, addYear, subtractYear, getDate}) => {
-  const month = moment.monthsShort();
+const BaseComponent: React.SFC<YearPropsType> = ({currentDate, addYear, subtractYear, getDate, yearArray}) => {
+  const thisYear = parseInt(moment().format("YYYY"), 10);
   return (
     <>
       <CalendarSelect>
         <i className="fa fa-angle-left" aria-hidden="true" onClick={subtractYear} />
-        <CalendarDate>{currentDate.format('YYYY')} - {currentDate.add(10, "year").format('YYYY')}</CalendarDate>
+        <CalendarDate>{ yearArray.get(1) } - { yearArray.get(10) }</CalendarDate>
         <i className="fa fa-angle-right" aria-hidden="true" onClick={addYear} />
       </CalendarSelect>
       <WeekWrap>
         {
-          month.map((mon, index) => <YearText key={index} onClick={() => getDate(mon)}>{mon}</YearText>)
+          yearArray.map((year, index) => (
+            <YearText key={index} isThisYear={year === thisYear} isDecade={index > 0 && index < 11}>{year}</YearText>
+          )).toArray()
         }
       </WeekWrap>
     </>
@@ -37,6 +45,13 @@ const BaseComponent: React.SFC<YearPropsType> = ({currentDate, addYear, subtract
 };
 
 export const YearComponent = compose<YearPropsType, YearProps>(
+  withProps<YearInjectProps, YearProps>(({currentDate}) => {
+    const tYear = getYears(currentDate);
+    const yearArray = List().setSize(12).map((i, index) => tYear + index).toList();
+    return {
+      yearArray,
+    };
+  }),
   withHandlers<YearPropsType, YearHandler>({
     getDate: ({currentDate, setDate, addCurrentView}) => month => {
       const newYear = currentDate.clone().month(month);
@@ -63,11 +78,18 @@ const WeekWrap = styled.div`
 `;
 
 const YearText = styled.div`
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 25%;
   text-align: center;
+  font-size: 14px;
   cursor: pointer;
-  color: #4a4a4a;
-  margin-top: 10px;
+  margin-top: 20px;
+  color: ${props => props.isDecade ? props.isThisYear ? "#fff" : "#4a4a4a" : "#d0d0d0"}
+  background-color: ${props => props.isThisYear ? "#ff5151" : "none"};
+  border-radius: 50px;
 `;
 
 const CalendarDate = styled.div`
