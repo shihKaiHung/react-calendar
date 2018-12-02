@@ -17,7 +17,7 @@ interface YearInjectProps {
 }
 
 interface YearHandler {
-  getDate: (month: string) => void;
+  getDate: (year: number) => void;
   addYear: () => void;
   subtractYear: () => void;
 }
@@ -36,7 +36,12 @@ const BaseComponent: React.SFC<YearPropsType> = ({currentDate, addYear, subtract
       <WeekWrap>
         {
           yearArray.map((year, index) => (
-            <YearText key={index} isThisYear={year === thisYear} isDecade={index > 0 && index < 11}>{year}</YearText>
+            <YearText
+              key={index}
+              isThisYear={year === thisYear}
+              onClick={() => getDate(year)}
+              isDecade={index > 0 && index < 11}
+            >{year}</YearText>
           )).toArray()
         }
       </WeekWrap>
@@ -53,10 +58,10 @@ export const YearComponent = compose<YearPropsType, YearProps>(
     };
   }),
   withHandlers<YearPropsType, YearHandler>({
-    getDate: ({currentDate, setDate, addCurrentView}) => month => {
-      const newYear = currentDate.clone().month(month);
+    getDate: ({currentDate, setDate, addCurrentView}) => year => {
+      const newYear = currentDate.clone().year(year);
       setDate(newYear);
-      addCurrentView(0);
+      addCurrentView(1);
     },
     addYear: ({setNextDate, currentDate}) => () => {
       const nextYear = currentDate.add(10, "year");
