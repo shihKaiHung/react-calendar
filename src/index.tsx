@@ -1,9 +1,10 @@
-import { CalendarDay } from 'components/Calendar';
+import { CalendarDay } from 'components/Calendar/Calendar';
+import {DatePicker} from "components/DatePicker/DatePicker";
 import * as React from 'react';
 import { render } from 'react-dom';
 
 const APP = () => (
-  <CalendarDay />
+  <DatePicker />
 );
 
 render(<APP/>, document.getElementById('root'));

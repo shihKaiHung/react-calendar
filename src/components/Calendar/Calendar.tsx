@@ -1,6 +1,6 @@
-import {DaysComponent} from "components/Days";
-import {MonthComponent} from "components/Month";
-import {YearComponent} from "components/Year";
+import {DaysComponent} from "components/Calendar/Days";
+import {MonthComponent} from "components/Calendar/Month";
+import {YearComponent} from "components/Calendar/Year";
 import * as moment from 'moment';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -10,7 +10,11 @@ interface CalendarDayState {
   currentView: number;
 }
 
-export class CalendarDay extends React.Component<{}, CalendarDayState> {
+interface CalendarProps {
+  setDate: (date: moment.Moment) => void;
+}
+
+export class CalendarDay extends React.Component<CalendarProps, CalendarDayState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +57,7 @@ export class CalendarDay extends React.Component<{}, CalendarDayState> {
     this.setState({
       currentDate: date,
     });
+    this.props.setDate(date);
   }
 
   public render() {

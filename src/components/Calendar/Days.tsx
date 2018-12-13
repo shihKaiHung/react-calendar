@@ -2,8 +2,8 @@ import * as moment from "moment";
 import * as React from 'react';
 import {compose} from "recompose";
 import styled from 'styled-components';
-import {getDays} from "../utils/getDays";
-import {day, dayName} from "../utils/week";
+import {getDays} from "../../utils/getDays";
+import {day, dayName} from "../../utils/week";
 
 interface DaysProps {
   currentDate: moment.Moment;

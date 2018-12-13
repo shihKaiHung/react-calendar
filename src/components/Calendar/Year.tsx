@@ -3,7 +3,7 @@ import * as moment from "moment";
 import * as React from 'react';
 import {compose, withHandlers, withProps} from 'recompose';
 import styled from 'styled-components';
-import {getYears} from "../utils/getYears";
+import {getYears} from "../../utils/getYears";
 
 interface YearProps {
   currentDate: moment.Moment;
