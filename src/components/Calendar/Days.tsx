@@ -1,6 +1,6 @@
 import * as moment from "moment";
 import * as React from 'react';
-import {compose} from "recompose";
+import {compose, withHandlers} from "recompose";
 import styled from 'styled-components';
 import {getDays} from "../../utils/getDays";
 import {day, dayName} from "../../utils/week";
@@ -10,13 +10,19 @@ interface DaysProps {
   handleSubtractMonth: () => void;
   handleAddMonth: () => void;
   addCurrentView: (view: number) => void;
+  setDate: (date: moment.Moment) => void;
 }
 
-export const BaseComponent: React.SFC<DaysProps> = ({
+interface DaysHandler {
+  getDate: (days: string) => void;
+}
+
+export const BaseComponent: React.SFC<DaysProps & DaysHandler> = ({
   currentDate,
   handleSubtractMonth,
   handleAddMonth,
   addCurrentView,
+  getDate,
 }) => {
   const daysArray = getDays(currentDate);
   return (
@@ -34,7 +40,7 @@ export const BaseComponent: React.SFC<DaysProps> = ({
         }
         {
           daysArray.map((d, index) =>
-            <Days currentMonth={d.currentMonth} isToday={d.isToday} key={index}>
+            <Days currentMonth={d.currentMonth} isToday={d.isToday} key={index} onClick={() => getDate(d.label)}>
               {d.label}
             </Days>)
         }
@@ -44,6 +50,12 @@ export const BaseComponent: React.SFC<DaysProps> = ({
 };
 
 export const DaysComponent = compose<{}, DaysProps>(
+  withHandlers<DaysProps, DaysHandler>({
+    getDate: ({currentDate, setDate}) => days => {
+      const newDate = currentDate.clone().day(days);
+      setDate(newDate);
+    },
+  })
 )(BaseComponent);
 
 const WeekWrap = styled.div`

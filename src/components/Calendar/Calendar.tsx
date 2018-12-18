@@ -70,6 +70,7 @@ export class CalendarDay extends React.Component<CalendarProps, CalendarDayState
               currentDate={this.state.currentDate}
               handleAddMonth={this.handleAddMonth}
               handleSubtractMonth={this.handleSubtractMonth}
+              setDate={this.setDate}
             />
           </Wrap>
         );
